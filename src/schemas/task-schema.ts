@@ -1,13 +1,10 @@
 import Joi from "joi";
-import { Task } from "../protocols/task";
+import { InsertTask } from "../protocols/task";
 
-export const taskValidation = Joi.object<Task>({
+export const taskValidation = Joi.object<InsertTask>({
     name: Joi.string().required(),
     description: Joi.string().required(),
     day: Joi.date().required(),
-    responsible: Joi.object({
-        name:Joi.string().required(),
-        age:Joi.string().required()
-    }).required(),
+    responsibleToken: Joi.string().required(),
     status: Joi.boolean().required()
 })

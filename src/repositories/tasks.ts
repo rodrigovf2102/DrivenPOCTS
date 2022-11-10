@@ -1,46 +1,37 @@
-import { Task } from "../protocols/task.js";
+import { Task, TaskEntity, TaskPerResponsible } from "../protocols/task.js";
 import { connection } from "../database/database.js";
 import { QueryResult } from "pg";
 import { ResponbibleTask } from "../protocols/responsibleTask.js";
 
-async function searchTasks() : Promise<QueryResult<ResponbibleTask>>{
+async function searchTasks(): Promise<QueryResult<ResponbibleTask>> {
     return connection.query(
         `SELECT tasks.*, responsibles.name AS "responsibleName",responsibles.age,responsibles.token 
         FROM tasks 
             JOIN responsibles ON "tasks"."idResponsible" = "responsibles"."id";`);
 }
 
-async function insertTask(task : Task) : Promise<QueryResult>{
-    return connection.query(`INSERT INTO tasks (name,description,day,responsible,status)
+async function addTask(task: TaskEntity): Promise<QueryResult> {
+    return connection.query(`INSERT INTO tasks (name,description,day,"idResponsible",status)
                             VALUES ($1, $2, $3, $4, $5)`,
-                            [task.name,task.description,task.day,task.responsible,task.status])
+        [task.name, task.description, task.day, task.idResponsible, task.status])
 }
-/*
-const tasks : Task[] = [
-    {
-        id:1,
-        name:'Cozinhar',
-        description:'fazer o almoço',
-        day: new Date('2022,11,9'),
-        responsible: responsibles[0],
-        status:false
-    },
-    {
-        id:2,
-        name:'Limpar a sala',
-        description:'passar a vassoura na sala',
-        day: new Date('2022,11,10'),
-        responsible: responsibles[1],
-        status:false
-    },
-    {
-        id:3,
-        name:'Lavar a louça',
-        description:'lavar a louça da cozinha',
-        day: new Date('2022,11,11'),
-        responsible: responsibles[2],
-        status:false
-    }
-]
-*/
-export { searchTasks, insertTask };
+
+async function upTask(taskId: number): Promise<QueryResult> {
+    return connection.query(`UPDATE tasks SET status=$1 WHERE id=$2`, [true, taskId])
+}
+
+async function getTaskByIds(idResponsible: number, taskId: number): Promise<QueryResult<TaskEntity>> {
+    return connection.query(`SELECT * FROM tasks WHERE id=$1 AND "idResponsible=$2"`, [idResponsible, taskId]);
+}
+
+async function deleteTaskByIds(idResponsible: number, taskId: number): Promise<QueryResult> {
+    return connection.query(`DELETE FROM tasks WHERE id=$1 AND "idResponsible"=$2`, [idResponsible, taskId]);
+}
+
+async function getTasksPerUser() : Promise<QueryResult<TaskPerResponsible>>{
+    return connection.query(`SELECT responsibles.name, COUNT("responsibles"."id") AS "tasksNumber" FROM tasks 
+                                JOIN responsibles ON "tasks"."idResponsible" = "responsibles"."id" 
+                                GROUP BY responsibles.name `)
+}
+
+export { searchTasks, addTask, upTask, getTaskByIds, deleteTaskByIds, getTasksPerUser };

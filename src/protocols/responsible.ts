@@ -4,3 +4,5 @@ export type Responsible = {
     age:number,
     token:string
 }
+
+export type InsertResponsible = Omit<Responsible,'token'|'id'>

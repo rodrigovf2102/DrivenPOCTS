@@ -1,11 +1,15 @@
 import { Responsible } from "../protocols/responsible.js";
-import { v4 as uuidv4 } from 'uuid';
+
 import { connection } from "../database/database.js";
 import { QueryResult } from "pg";
 
+async function getResponsibleByToken(token: string) : Promise<QueryResult<Responsible>> {
+    return connection.query('SELECT * FROM responsibles WHERE token=$1', [token]);
+}
 
-async function searchResponsibles(): Promise<QueryResult<Responsible>> {
-    return connection.query('SELECT * FROM responsibles');
+async function insertResponsible(responsible : Responsible) : Promise<QueryResult>{
+    return connection.query('INSERT INTO responsibles (name,age,token) VALUES ($1,$2,$3)',
+                            [responsible.name,responsible.age,responsible.token])
 }
 /*
 const responsibles: Responsible[] = [{
@@ -30,4 +34,4 @@ const responsibles: Responsible[] = [{
 export default responsibles;
 */
 
-export { searchResponsibles }
+export { getResponsibleByToken, insertResponsible }
