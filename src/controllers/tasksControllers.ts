@@ -1,21 +1,38 @@
-import tasks from "../repositories/tasks.js";
+import { searchTasks, insertTask } from "../repositories/tasks.js";
 import { Request, Response } from 'express';
 import { Task } from "../protocols/task.js";
-import responsibles from "../repositories/responsibles.js";
+import { searchResponsibles } from "../repositories/responsibles.js";
 
-function getTasks(req: Request, res: Response) {
+
+async function getTasks(req: Request, res: Response) {
     try {
+        const responsibleTasks = (await searchTasks()).rows;
+        const tasks : Task[] = [];
+        for (const responsibleTask of responsibleTasks) {
+            const task : Task = {
+                name: responsibleTask.name,
+                description: responsibleTask.description,
+                day: responsibleTask.day,
+                status: responsibleTask.status,
+                responsible: {
+                    name: responsibleTask.responsibleName,
+                    age: responsibleTask.age,
+                    token: responsibleTask.token
+                }
+            }
+            tasks.push(task);   
+        }
         return res.status(200).send(tasks);
     } catch (error) {
         return res.status(500).send(error.message);
     }
 }
 
-function postTask(req: Request, res: Response) {
+async function postTask(req: Request, res: Response) {
     try {
         const newTask = req.body as Task;
-        newTask.id = tasks.length + 1;
-        tasks.push(newTask)
+        const insertedTask = await insertTask(newTask);
+        console.log(insertedTask)
         return res.status(200).send('task added');
     } catch (error) {
         return res.status(500).send(error.message);
@@ -23,6 +40,7 @@ function postTask(req: Request, res: Response) {
 }
 
 function updateTask(req: Request, res: Response) {
+    /*
     try {
         const id = req.params.taskId as string;
         if (isNaN(Number(id))) {
@@ -40,9 +58,11 @@ function updateTask(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).send(error.message);
     }
+    */
 }
 
 function deleteTask(req: Request, res: Response) {
+    /*
     try {
         const id = req.params.taskId as string;
         if (isNaN(Number(id))) {
@@ -60,9 +80,11 @@ function deleteTask(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).send(error.message);
     }
+    */
 }
 
 function getTaskQuantityByResponsible(req: Request, res: Response) {
+    /*
     const taskPerPeople: ({ name: string, quantity: number })[] = [];
     try {
         for (const responsible of responsibles) {
@@ -74,6 +96,7 @@ function getTaskQuantityByResponsible(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).send(error.message);
     }
+    */
 }
 
 export { getTasks, postTask, updateTask, deleteTask, getTaskQuantityByResponsible };

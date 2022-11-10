@@ -1,6 +1,21 @@
-import responsibles from "./responsibles.js";
 import { Task } from "../protocols/task.js";
+import { connection } from "../database/database.js";
+import { QueryResult } from "pg";
+import { ResponbibleTask } from "../protocols/responsibleTask.js";
 
+async function searchTasks() : Promise<QueryResult<ResponbibleTask>>{
+    return connection.query(
+        `SELECT tasks.*, responsibles.name AS "responsibleName",responsibles.age,responsibles.token 
+        FROM tasks 
+            JOIN responsibles ON "tasks"."idResponsible" = "responsibles"."id";`);
+}
+
+async function insertTask(task : Task) : Promise<QueryResult>{
+    return connection.query(`INSERT INTO tasks (name,description,day,responsible,status)
+                            VALUES ($1, $2, $3, $4, $5)`,
+                            [task.name,task.description,task.day,task.responsible,task.status])
+}
+/*
 const tasks : Task[] = [
     {
         id:1,
@@ -27,5 +42,5 @@ const tasks : Task[] = [
         status:false
     }
 ]
-
-export default tasks;
+*/
+export { searchTasks, insertTask };
