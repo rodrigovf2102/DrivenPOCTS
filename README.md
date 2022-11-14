@@ -23,7 +23,7 @@ DrivenPOCTS is a API for storage, insert and update home tasks by residents.
 2. The route (get) '/taks' returns all home tasks registred;
 3. The route (post) '/addTask' insert a task, password of 'responsible' is required and have to be send by 'headers', 'authorization';
     ```
-    Object espected on body:
+    Object expected on body:
     {
       name: ...,
       description: ...,
@@ -34,7 +34,7 @@ DrivenPOCTS is a API for storage, insert and update home tasks by residents.
     ```
 4. The route (post) '/addResponsible' insert a responsible and returns the new responsible password;
     ```
-    Object espected on body:
+    Object expected on body:
     {
       name:...,
       age:...,
@@ -42,5 +42,5 @@ DrivenPOCTS is a API for storage, insert and update home tasks by residents.
     }
     ```
 5. The route (put) '/completeTask/:taskId' set task status to true, that means task is completed, needs the taskId to be updated;
-6. The route (delete) '/deleteTask/:taskId' delete a task, needs the taskId to be deleted;
+6. The route (delete) '/deleteTask/:taskId' delete a task, needs taskId and password of 'responsible', password have to be send by 'headers', 'authorization';
 7. The route (get) '/taskInfo' returns quantity of tasks by users, if the user has no tasks he will not be showed;
