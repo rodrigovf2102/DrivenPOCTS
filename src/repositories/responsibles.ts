@@ -11,27 +11,5 @@ async function insertResponsible(responsible : Responsible) : Promise<QueryResul
     return connection.query('INSERT INTO responsibles (name,age,token) VALUES ($1,$2,$3)',
                             [responsible.name,responsible.age,responsible.token])
 }
-/*
-const responsibles: Responsible[] = [{
-    id: 1,
-    name: 'Rodrigo',
-    age: 19,
-    token: uuidv4()
-},
-{
-    id: 2,
-    name: 'Lucas',
-    age: 23,
-    token: uuidv4()
-},
-{
-    id: 3,
-    name: 'Paulo',
-    age: 24,
-    token: uuidv4()
-}]
-
-export default responsibles;
-*/
 
 export { getResponsibleByToken, insertResponsible }
