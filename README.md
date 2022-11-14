@@ -22,19 +22,23 @@ DrivenPOCTS is a API for storage, insert and update home tasks by residents.
 1. After starting, API can be used on ThunderClient or other similar application;
 2. The route (get) '/taks' returns all home tasks registred;
 3. The route (post) '/addTask' insert a task, password of 'responsible' is required and have to be send by 'headers', 'authorization';
-    ```Object espected on body:{
+    ```
+    Object espected on body:{
       name: ...,
       description: ...,
       day: ...,
       idResponsible: ...,
       status: ...
-    }```
+    }
+    ```
 4. The route (post) '/addResponsible' insert a responsible and returns the new responsible password;
-    ```Object espected on body:{
+    ```
+    Object espected on body:{
       name:...,
       age:...,
       token:...
-    }```
+    }
+    ```
 5. The route (put) '/completeTask/:taskId' set task status to true, that means task is completed, needs the taskId to be updated;
 6. The route (delete) '/deleteTask/:taskId' delete a task, needs the taskId to be deleted;
 7. The route (get) '/taskInfo' returns quantity of tasks by users, if the user has no tasks he will not be showed;
